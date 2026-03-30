@@ -1,5 +1,362 @@
-<!doctype html>
-<html>
-<head><meta charset="utf-8"><title>My Page</title></head>
-<body><h1>Hello GitHub Pages</h1></body>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Anonymous TTS Demo</title>
+  <style>
+    body { font-family: "Georgia", Times, serif; margin: 40px; max-width: 900px; }
+    h1 { font-size: 28px; margin-bottom: 6px; }
+    .muted { color: #666; margin-top: 0; }
+    .section-title { font-size: 18px; }
+    .section-header { font-size: 20px; font-weight: 600; margin: 26px 0 6px; }
+    .card { border: 1px solid #e5e5e5; border-radius: 10px; padding: 16px; margin: 18px 0; }
+    .row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+    @media (max-width: 760px){ .row { grid-template-columns: 1fr; } }
+    .label { font-weight: 600; margin: 10px 0 6px; }
+    audio { width: 100%; }
+    code { background: #f6f8fa; padding: 2px 6px; border-radius: 6px; }
+    /* Tune figure width: change max-width (e.g. 600px, 100%, 80%) */
+    .figure-block { margin: 20px auto 28px; max-width: 640px; }
+    .figure-block.figure-first { margin-top: 0; }
+    .figure-block img { width: 100%; max-width: 100%; height: auto; display: block; border: 1px solid #e5e5e5; border-radius: 8px; }
+    .figure-block figcaption { font-size: 14px; color: #444; line-height: 1.45; margin-top: 10px; }
+    .figure-block .figure-label { font-weight: 600; margin-right: 6px; }
+    .figure-block.figure-narrow { max-width: 480px; }
+    /* Emotion alignment figure: do not use .figure-block here (conflicts with <figure> layout rules). */
+    .emotion-alignment { margin: 28px 0 36px; max-width: 100%; }
+    .emotion-alignment h2 { font-size: 20px; font-weight: 600; margin: 0 0 12px; }
+    .emotion-alignment .figure-container { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    .emotion-alignment .figure-img {
+      width: 100%; max-width: 100%; height: auto; display: block; border: 1px solid #e5e5e5; border-radius: 8px;
+    }
+    .emotion-alignment .figure-caption { font-size: 14px; color: #444; line-height: 1.45; margin-top: 12px; }
+  </style>
+</head>
+<body>
+  <figure class="figure-block figure-first">
+    <img src="figures/scale_similarity_plot.png" alt="Steering scale vs. similarity" />
+    <figcaption>
+      <span class="figure-label">Figure 1.</span>
+      Similarity as a function of steering scale summary.
+    </figcaption>
+  </figure>
+  <section id="emotion-alignment" class="emotion-alignment">
+    <h2>Emotion-Level Alignment in Embedding Space</h2>
+
+    <div class="figure-container">
+      <img
+        src="figures/scale_alignment_grid_topk_1_3_6_web.png?v=2"
+        width="1200"
+        height="988"
+        alt="Scale-dependent alignment to emotion prototypes"
+        class="figure-img"
+        loading="eager"
+        decoding="async"
+      />
+    </div>
+
+    <p class="figure-caption">
+      <strong>Figure 2.</strong> Scale-dependent alignment to emotion prototypes across happiness, anger, and sadness.
+      We compare generated samples against both real-emotion and neutral reference groups to calibrate similarity scores.
+      Happiness exhibits a clear monotonic trend, while anger shows weaker asymmetry and sadness requires multi-latent
+      modulation to achieve consistent alignment, indicating emotion-dependent controllability.
+    </p>
+  </section>
+  <section id="human-eval" style="margin: 28px 0 36px;">
+    <p>
+      <b>Table 1.</b> Human evaluation with 20 raters. SAE improves both emotion expression
+      (EMOS) and naturalness (NMOS) over Global Steering and Random SAE, indicating
+      perceptually meaningful improvements.
+    </p>
+
+    <table style="border-collapse: collapse; margin-top: 12px; min-width: 420px;">
+      <tr>
+        <th style="border-bottom: 2px solid #000; padding: 8px 16px; text-align: left;">Method</th>
+        <th style="border-bottom: 2px solid #000; padding: 8px 16px;">EMOS ↑</th>
+        <th style="border-bottom: 2px solid #000; padding: 8px 16px;">NMOS ↑</th>
+      </tr>
+      <tr>
+        <td style="padding: 8px 16px; text-align: left;"><b>SAE</b></td>
+        <td style="padding: 8px 16px;"><b>3.22</b></td>
+        <td style="padding: 8px 16px;"><b>3.49</b></td>
+      </tr>
+      <tr>
+        <td style="padding: 8px 16px; text-align: left;">Global</td>
+        <td style="padding: 8px 16px;">3.10</td>
+        <td style="padding: 8px 16px;">3.38</td>
+      </tr>
+      <tr>
+        <td style="padding: 8px 16px; text-align: left;">Random</td>
+        <td style="padding: 8px 16px;">1.82</td>
+        <td style="padding: 8px 16px;">3.22</td>
+      </tr>
+    </table>
+
+    <p style="margin-top: 10px;">
+      EMOS: target emotion expression. NMOS: perceived naturalness.
+    </p>
+  </section>
+  <section id="acoustic-analysis" style="margin: 40px 0;">
+    <h2 style="margin-bottom: 10px;">Quantitative Acoustic Analysis</h2>
+
+    <figure class="figure-block figure-narrow" style="margin-top: 8px; margin-bottom: 22px;">
+      <img src="figures/paired_f0.png?v=1" alt="Paired F0: baseline vs steered" />
+      <figcaption>
+        <span class="figure-label">Figure 3.</span>
+        Paired comparison of fundamental frequency (F0) between baseline and steered conditions (same text and speaker).
+      </figcaption>
+    </figure>
+
+    <p style="max-width: 980px; line-height: 1.65; margin-bottom: 14px;">
+      <strong>Table 2.</strong> Quantitative analysis of acoustic features under controlled steering
+      (same text and speaker). Steering significantly increases pitch (F0) and RMS energy,
+      while duration remains unchanged.
+    </p>
+
+    <div style="overflow-x: auto;">
+      <table style="
+      border-collapse: collapse;
+      width: 100%;
+      min-width: 860px;
+      font-size: 16px;
+      line-height: 1.4;
+      border-top: 2px solid #222;
+      border-bottom: 2px solid #222;
+    ">
+        <thead>
+          <tr style="border-bottom: 1px solid #999;">
+            <th style="padding: 10px 14px; text-align: left;">Feature</th>
+            <th style="padding: 10px 14px; text-align: center;">Baseline Mean</th>
+            <th style="padding: 10px 14px; text-align: center;">Baseline Std</th>
+            <th style="padding: 10px 14px; text-align: center;">Steered Mean</th>
+            <th style="padding: 10px 14px; text-align: center;">Steered Std</th>
+            <th style="padding: 10px 14px; text-align: center;">Δ (Steered − Base)</th>
+            <th style="padding: 10px 14px; text-align: center;">p-value</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr style="border-bottom: 1px solid #ddd;">
+            <td style="padding: 10px 14px; text-align: left;">F0 (Hz)</td>
+            <td style="padding: 10px 14px; text-align: center;">167.99</td>
+            <td style="padding: 10px 14px; text-align: center;">11.20</td>
+            <td style="padding: 10px 14px; text-align: center;"><strong>191.10</strong></td>
+            <td style="padding: 10px 14px; text-align: center;">14.06</td>
+            <td style="padding: 10px 14px; text-align: center;"><strong>+23.11</strong></td>
+            <td style="padding: 10px 14px; text-align: center;">1.07e-04</td>
+          </tr>
+          <tr style="border-bottom: 1px solid #ddd;">
+            <td style="padding: 10px 14px; text-align: left;">Duration (s)</td>
+            <td style="padding: 10px 14px; text-align: center;">1.685</td>
+            <td style="padding: 10px 14px; text-align: center;">0.234</td>
+            <td style="padding: 10px 14px; text-align: center;">1.662</td>
+            <td style="padding: 10px 14px; text-align: center;">0.259</td>
+            <td style="padding: 10px 14px; text-align: center;">−0.023</td>
+            <td style="padding: 10px 14px; text-align: center;">0.687</td>
+          </tr>
+          <tr>
+            <td style="padding: 10px 14px; text-align: left;">RMS Energy</td>
+            <td style="padding: 10px 14px; text-align: center;">0.02712</td>
+            <td style="padding: 10px 14px; text-align: center;">0.00354</td>
+            <td style="padding: 10px 14px; text-align: center;"><strong>0.03146</strong></td>
+            <td style="padding: 10px 14px; text-align: center;">0.00479</td>
+            <td style="padding: 10px 14px; text-align: center;"><strong>+0.00435</strong></td>
+            <td style="padding: 10px 14px; text-align: center;">0.00769</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p style="max-width: 980px; line-height: 1.65; margin-top: 14px; color: #444;">
+      F0 measures pitch, RMS energy measures vocal intensity, and duration measures temporal length.
+      The results indicate that the selected latent primarily modulates pitch and energy rather than speech rate.
+    </p>
+  </section>
+  <h1>Anonymous TTS Demo</h1>
+  <!-- <p class="muted">Audio samples for anonymous submission are provided in the supplementary materials.</p> -->
+  <p class="section-header">Single-latent steering examples. (evaluation features)</p>
+  <div class="card">
+    <div class="label">Example 1 (Latent #3237)</div>
+    <p><b>Text:</b> I arrived at the location earlier than expected.</p>
+    <div class="row">
+      <div>
+        <div class="label">Happy (baseline)</div>
+        <audio controls src="samples/utt00000_text00000_Happiness_k3237_s0_steer_v2.wav?v=1"></audio>
+      </div>
+      <div>
+        <div class="label">Happy (scaled +60)</div>
+        <audio controls src="samples/utt00000_text00000_Happiness_k3237_s60_steer.wav"></audio>
+      </div>
+      <div>
+        <div class="label">Happy (scaled -60)</div>
+        <audio controls src="samples/utt00000_text00000_Happiness_k3237_s-60_steer.wav"></audio>
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="label">Example 2 (Latent #24)</div>
+    <p><b>Text:</b> I arrived at the location earlier than expected.</p>
+    <div class="row">
+      <div>
+        <div class="label">Anger (baseline)</div>
+        <audio controls src="samples/utt00000_text00000_Anger_k24_s0_steer.wav?v=2"></audio>
+      </div>
+      <div>
+        <div class="label">Anger (scaled +70)</div>
+        <audio controls src="samples/utt00000_text00000_Anger_k24_s70_steer.wav?v=2"></audio>
+      </div>
+      <div>
+        <div class="label">Anger (scaled -70)</div>
+        <audio controls src="samples/utt00000_text00000_Anger_k24_s-70_steer.wav?v=2"></audio>
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="label">Example 3 (Latent #195)</div>
+    <p><b>Text:</b> I observe the results after processing.</p>
+    <p><b>Note:</b> Latent #195 (Happy factor.)</p>
+    <div class="row">
+      <div>
+        <div class="label">Neutral (scaled -50)</div>
+        <audio controls src="samples/utt00190_text00090_Neutral_k195_s-50_steer.wav?v=2"></audio>
+      </div>
+      <div>
+        <div class="label">Neutral (baseline)</div>
+        <audio controls src="samples/utt00190_text00090_Neutral_k195_s0_steer.wav?v=2"></audio>
+      </div>
+      <div>
+        <div class="label">Neutral (scaled +50)</div>
+        <audio controls src="samples/utt00190_text00090_Neutral_k195_s50_steer.wav?v=2"></audio>
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="label">Example 4 (Latent #275)</div>
+    <p><b>Text:</b> I arrived at the location earlier than expected.</p>
+    <div class="row">
+      <div>
+        <div class="label">Sadness (baseline)</div>
+        <audio controls src="samples/utt00000_text00000_Sadness_k275_s0_steer.wav?v=2"></audio>
+      </div>
+      <div>
+        <div class="label">Sadness (scaled +100)</div>
+        <audio controls src="samples/utt00000_text00000_Sadness_k275_s150_steer.wav?v=2"></audio>
+      </div>
+      <div>
+        <div class="label">Sadness (scaled -100)</div>
+        <audio controls src="samples/utt00000_text00000_Sadness_k275_s-150_steer.wav?v=2"></audio>
+      </div>
+    </div>
+  </div>
+
+  <p class="section-header">Neutral → Target steering (Top6 features)</p>
+  <div class="card">
+    <div class="label">Example 5 (Neutral → Happy)</div>
+    <p><b>Text:</b> The task reqires several steps to complete.</p>
+    <div class="row">
+      <div>
+        <div class="label">Neutral (baseline)</div>
+        <audio controls src="samples/utt00129_text00029_Neutral_knone_s1p000_baseline.wav?v=2"></audio>
+      </div>
+      <div>
+        <div class="label">Happy (scaled +80)</div>
+        <audio controls src="samples/utt00129_text00029_Neutral_knone_s80p000_steer.wav?v=2"></audio>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="label">Example 6 (Neutral → Anger)</div>
+    <p><b>Text:</b> I arrived at the location earlier than expected.</p>
+    <div class="row">
+      <div>
+        <div class="label">Neutral (baseline)</div>
+        <audio controls src="samples/utt00100_text00000_Neutral_knone_s1p000_baseline.wav?v=2"></audio>
+      </div>
+      <div>
+        <div class="label">Neutral (scaled +60)</div>
+        <audio controls src="samples/utt00100_text00000_Neutral_knone_s60p000_steer.wav?v=2"></audio>
+      </div>        
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="label">Example 7 (Neutral → Sadness)</div>
+    <p><b>Text:</b> The process compelete without interruption.</p>
+    <div class="row">
+      <div>
+        <div class="label">Neutral (baseline)</div>
+        <audio controls src="samples/utt00115_text00015_Neutral_knone_s1p000_baseline.wav?v=2"></audio>
+      </div>
+      <div>
+        <div class="label">Sadness (scaled +60)</div>
+        <audio controls src="samples/utt00115_text00015_Neutral_knone_s40p000_steer.wav?v=2"></audio>
+      </div>        
+    </div>
+  </div>
+
+  <p class="section-header">Target → Neutral steering</p>
+  <div class="card">
+    <div class="label">Example 8 (Anger → Neutral)</div>
+    <p><b>Text:</b> I review the document before sending it.</p>
+    <div class="row">
+      <div>
+        <div class="label">Anger (baseline)</div>
+        <audio controls src="samples/utt00004_text00004_Anger_knone_s1p000_baseline.wav?v=2"></audio>
+      </div>
+      <div>
+        <div class="label">Neutral (scaled -60)</div>
+        <audio controls src="samples/utt00004_text00004_Anger_knone_s-60p000_steer.wav?v=2"></audio>
+      </div>        
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="label">Example 9 (Sadness → Neutral)</div>
+    <p><b>Text:</b>I review the document before sending it.</p>
+    <p><b>Note:</b> Latent #4 (Sadness factor.)</p>
+    <div class="row">
+      <div>
+        <div class="label">Sadness (baseline)</div>
+        <audio controls src="samples/utt00004_text00004_Sadness_knone_s1p000_baseline.wav?v=2"></audio>
+      </div>
+      <div>
+        <div class="label">Neutral (scaled -40)</div>
+        <audio controls src="samples/utt00004_text00004_Sadness_knone_s-40p000_steer.wav?v=2"></audio>
+      </div>        
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="label">Example 10 (Happiness → Neutral)</div>
+    <p><b>Text:</b> The message appeared on the screen.</p>
+    <div class="row">
+      <div>
+        <div class="label">Happiness (baseline)</div>
+        <audio controls src="samples/utt00033_text00033_Happiness_knone_s1p000_baseline.wav?v=2"></audio>
+      </div>
+      <div>
+        <div class="label">Neutral (scaled -50)</div>
+        <audio controls src="samples/utt00033_text00033_Happiness_knone_s-50p000_steer.wav?v=2"></audio>
+      </div>        
+    </div>
+  </div>
+
+  
+  <!-- <div class="card">
+    <div class="label">Scaling (optional)</div>
+    <p>Put multiple scales in <code>samples/</code> and list them here.</p>
+    <div class="row">
+      <div>
+        <div class="label">Anger -60</div>
+        <audio controls src="samples/anger_m60.wav"></audio>
+      </div>
+      <div>
+        <div class="label">Anger +60</div>
+        <audio controls src="samples/anger_p60.wav"></audio>
+      </div>
+    </div>
+  </div> -->
+
+</body>
 </html>
