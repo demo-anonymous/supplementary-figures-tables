@@ -5,12 +5,36 @@
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <title>Supplementary Figures and Tables</title>
   <style>
+    :root {
+      /* Figure captions: 小四 (12pt), single place to tune */
+      --figure-caption-font-size: 12pt;
+    }
     body { font-family: "Georgia", Times, serif; margin: 40px; max-width: 900px; }
+    .page-header {
+      margin-bottom: 36px;
+      padding-bottom: 28px;
+      border-bottom: 1px solid #e0e0e0;
+    }
+    .page-header h1 {
+      font-size: 2.15rem;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      margin: 0 0 14px;
+      color: #1a1a1a;
+      line-height: 1.2;
+    }
+    .page-header .page-lead {
+      font-size: 1.05rem;
+      line-height: 1.65;
+      color: #333;
+      margin: 0;
+      max-width: 52em;
+    }
     /* Tune figure width: change max-width (e.g. 600px, 100%, 80%) */
     .figure-block { margin: 20px auto 28px; max-width: 640px; }
     .figure-block.figure-first { margin-top: 0; }
     .figure-block img { width: 100%; max-width: 100%; height: auto; display: block; border: 1px solid #e5e5e5; border-radius: 8px; }
-    .figure-block figcaption { font-size: 14px; color: #444; line-height: 1.45; margin-top: 10px; }
+    .figure-block figcaption { font-size: var(--figure-caption-font-size); color: #444; line-height: 1.5; margin-top: 10px; }
     .figure-block .figure-label { font-weight: 600; margin-right: 6px; }
     .figure-block.figure-narrow { max-width: 480px; }
     /* Emotion alignment figure: do not use .figure-block here (conflicts with <figure> layout rules). */
@@ -20,17 +44,75 @@
     .emotion-alignment .figure-img {
       width: 100%; max-width: 100%; height: auto; display: block; border: 1px solid #e5e5e5; border-radius: 8px;
     }
-    .emotion-alignment .figure-caption { font-size: 14px; color: #444; line-height: 1.45; margin-top: 12px; }
+    .emotion-alignment .figure-caption { font-size: var(--figure-caption-font-size); color: #444; line-height: 1.5; margin-top: 12px; }
   </style>
 </head>
 <body>
+  <header class="page-header">
+    <h1>Supplementary Figures and Tables</h1>
+  </header>
   <figure class="figure-block figure-first">
     <img src="figures/scale_similarity_plot.png" alt="Steering scale vs. similarity" />
     <figcaption>
       <span class="figure-label">Figure 1.</span>
-      Similarity as a function of steering scale summary.
+      Mean similarity to the target emotion prototype (emotion2vec space) as a function of steering scale αₑ. Increasing αₑ consistently strengthens alignment with the target emotion, indicating controllable and predictable emotion modulation (shaded area: 95% CI).
     </figcaption>
   </figure>
+  <section id="human-eval" style="margin: 28px 0 36px;">
+    <p>
+      <b>Table 1.</b> Human evaluation with 20 raters. SAE improves both emotion expression
+      (EMOS) and naturalness (NMOS) over Global Steering and Random SAE, indicating
+      perceptually meaningful improvements.
+    </p>
+
+    <table
+      style="
+        border-collapse: collapse;
+        margin-top: 12px;
+        min-width: 420px;
+        width: 100%;
+        border-top: 2px solid #222;
+        border-bottom: 2px solid #222;
+      "
+    >
+      <thead>
+        <tr>
+          <th style="border-bottom: 1px solid #999; padding: 8px 16px; text-align: left; font-weight: 600;">Method</th>
+          <th style="border-bottom: 1px solid #999; padding: 8px 16px; text-align: center;">EMOS ↑</th>
+          <th style="border-bottom: 1px solid #999; padding: 8px 16px; text-align: center;">NMOS ↑</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td style="padding: 8px 16px; text-align: left;"><b>SAE</b></td>
+          <td style="padding: 8px 16px; text-align: center;"><b>3.22</b></td>
+          <td style="padding: 8px 16px; text-align: center;"><b>3.49</b></td>
+        </tr>
+        <tr>
+          <td style="padding: 8px 16px; text-align: left;">Global</td>
+          <td style="padding: 8px 16px; text-align: center;">3.10</td>
+          <td style="padding: 8px 16px; text-align: center;">3.38</td>
+        </tr>
+        <tr>
+          <td style="padding: 8px 16px; text-align: left;">Random</td>
+          <td style="padding: 8px 16px; text-align: center;">1.82</td>
+          <td style="padding: 8px 16px; text-align: center;">3.22</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p style="margin-top: 10px;">
+      EMOS: target emotion expression. NMOS: perceived naturalness.
+    </p>
+
+    <figure class="figure-block figure-narrow" style="margin-top: 24px; margin-bottom: 0;">
+      <img src="figures/paired_f0.png?v=1" alt="Paired F0: baseline vs steered" />
+      <figcaption>
+        <span class="figure-label">Figure 2.</span>
+        Paired comparison of fundamental frequency (F0) between baseline and steered conditions (same text and speaker).
+      </figcaption>
+    </figure>
+  </section>
   <section id="emotion-alignment" class="emotion-alignment">
     <h2>Emotion-Level Alignment in Embedding Space</h2>
 
@@ -47,56 +129,14 @@
     </div>
 
     <p class="figure-caption">
-      <strong>Figure 2.</strong> Scale-dependent alignment to emotion prototypes across happiness, anger, and sadness.
+      <strong>Figure 3.</strong> Scale-dependent alignment to emotion prototypes across happiness, anger, and sadness.
       We compare generated samples against both real-emotion and neutral reference groups to calibrate similarity scores.
       Happiness exhibits a clear monotonic trend, while anger shows weaker asymmetry and sadness requires multi-latent
       modulation to achieve consistent alignment, indicating emotion-dependent controllability.
     </p>
   </section>
-  <section id="human-eval" style="margin: 28px 0 36px;">
-    <p>
-      <b>Table 1.</b> Human evaluation with 20 raters. SAE improves both emotion expression
-      (EMOS) and naturalness (NMOS) over Global Steering and Random SAE, indicating
-      perceptually meaningful improvements.
-    </p>
-
-    <table style="border-collapse: collapse; margin-top: 12px; min-width: 420px;">
-      <tr>
-        <th style="border-bottom: 2px solid #000; padding: 8px 16px; text-align: left;">Method</th>
-        <th style="border-bottom: 2px solid #000; padding: 8px 16px;">EMOS ↑</th>
-        <th style="border-bottom: 2px solid #000; padding: 8px 16px;">NMOS ↑</th>
-      </tr>
-      <tr>
-        <td style="padding: 8px 16px; text-align: left;"><b>SAE</b></td>
-        <td style="padding: 8px 16px;"><b>3.22</b></td>
-        <td style="padding: 8px 16px;"><b>3.49</b></td>
-      </tr>
-      <tr>
-        <td style="padding: 8px 16px; text-align: left;">Global</td>
-        <td style="padding: 8px 16px;">3.10</td>
-        <td style="padding: 8px 16px;">3.38</td>
-      </tr>
-      <tr>
-        <td style="padding: 8px 16px; text-align: left;">Random</td>
-        <td style="padding: 8px 16px;">1.82</td>
-        <td style="padding: 8px 16px;">3.22</td>
-      </tr>
-    </table>
-
-    <p style="margin-top: 10px;">
-      EMOS: target emotion expression. NMOS: perceived naturalness.
-    </p>
-  </section>
   <section id="acoustic-analysis" style="margin: 40px 0;">
     <h2 style="margin-bottom: 10px;">Quantitative Acoustic Analysis</h2>
-
-    <figure class="figure-block figure-narrow" style="margin-top: 8px; margin-bottom: 22px;">
-      <img src="figures/paired_f0.png?v=1" alt="Paired F0: baseline vs steered" />
-      <figcaption>
-        <span class="figure-label">Figure 3.</span>
-        Paired comparison of fundamental frequency (F0) between baseline and steered conditions (same text and speaker).
-      </figcaption>
-    </figure>
 
     <p style="max-width: 980px; line-height: 1.65; margin-bottom: 14px;">
       <strong>Table 2.</strong> Quantitative analysis of acoustic features under controlled steering
